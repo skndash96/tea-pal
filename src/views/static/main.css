@@ -1,0 +1,28 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: sans-serif;
+}
+
+
+body {
+    font-size: calc(15px + 0.390625vw);
+}
+
+a {
+    text-decoration: none;
+}
+input {
+    outline: none;
+    border: none;
+}
+input.classic {
+    padding: .1rem .5rem;
+}
+button.classic:hover {
+    transform: scale(0.9);
+}
+button, a {
+    cursor: pointer;
+}
