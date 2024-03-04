@@ -105,6 +105,18 @@
                 <label for="cutoff"> Cutoff </label>
                 <input name="cutoff" class="classic" type="text" />
             </div>
+            <div>
+                <label for="category"> Category </label>
+                <select name="category" class="classic" type="text">
+                    <option value="">Any</option>
+                    <option value="BC">BC</option>
+                    <option value="OC">OC</option>
+                    <option value="MBC">MBC</option>
+                    <option value="BCM">BCM</option>
+                    <option value="SC">SC</option>
+                    <option value="ST">ST</option>
+                </select>
+            </div>
             <button class="classic" type="submit">Query</button>
 
             <p>We have a collection of details of <!--data_length--> students and their respective colleges fetched from
@@ -127,16 +139,25 @@
         let table = document.querySelector("#result table");
         let hint = document.getElementById("hint");
 
-        // const fields = ["name", "cutoff", "rank", "category", "college", "college_name", "college_city", "branch"];
-
         form.addEventListener("submit", async (event) => {
             event.preventDefault();
 
-            mark = form.querySelector("input[name=\'cutoff\']").value;
+            let cutoff = form.querySelector("input[name=\'cutoff\']").value;
+            let category = form.querySelector("select[name=\'category\']").value;
 
-            if (!mark) return alert("Invalid Input");
+            function query_sub_str(name, val) {
+                if (val) return `${name}=${val}&`;
+                return "";
+            }
 
-            let response = await fetch("/query?limit=50&cutoff=" + mark);
+            if (!cutoff) return alert("Invalid Input");
+
+            let response = await fetch(
+                "/query?"
+                + query_sub_str("cutoff", cutoff)
+                + query_sub_str("category", category)
+            );
+
             let data = await response.json();
 
             table.innerHTML = "";

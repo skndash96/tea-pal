@@ -30,6 +30,6 @@ input.classic {
 button.classic:hover {
     transform: scale(0.9);
 }
-button, a {
+button, a, select {
     cursor: pointer;
 }

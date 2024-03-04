@@ -8,31 +8,37 @@ use crate::models::Ranking;
 struct Options {
     limit: Option<u32>,
     cutoff: Option<f32>,
-    rank: Option<u32>
+    category: Option<String>
 }
 
 #[get("/query")]
 pub async fn query(q: Query<Options>, db: Data<SqlitePool>) -> impl Responder {
+    let q = q.into_inner();
+
     println!("Get at /query: {:?}", q);
     
-    if !q.cutoff.is_some() && !q.rank.is_some() {
+    if !q.cutoff.is_some() {
         return HttpResponse::BadRequest().body("Cutoff or Rank is required for query.");
     }
 
     //Order of selection does not matter.
     let fetch = sqlx::query_as::<_, Ranking>(
-        "SELECT name,
+        format!(
+        "SELECT
+            name,
             category,
             cutoff,
             rank,
             college,
-            (SELECT (name || ', ' || city) FROM College WHERE id = college) as college_name,
-            branch || ', ' || (SELECT name FROM Branch WHERE id = branch) as branch_name
+            (SELECT CONCAT_WS(', ', name, city) FROM College WHERE id = college) as college_name,
+            CONCAT_WS(', ', branch, (SELECT name FROM Branch WHERE id = branch)) as branch_name
         FROM ranklist
-        WHERE cutoff <= $1 LIMIT $2",
-    )
-    .bind(q.cutoff)
-    .bind(q.limit.unwrap_or(50))
+        WHERE cutoff <= {} AND category = {}
+        LIMIT {}",
+        q.cutoff.unwrap(),
+        if q.category.is_some() { format!("'{}'" , q.category.unwrap()) } else { String::from("category") },
+        q.limit.unwrap_or(50)
+    ).as_str())
     .fetch_all(&**db)
     .await;
 

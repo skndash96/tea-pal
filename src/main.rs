@@ -1,8 +1,7 @@
 use actix_web::{web, App, HttpServer};
-use sqlx::{self, migrate::MigrateDatabase, Row, Sqlite, SqlitePool};
+use sqlx::{self, migrate::MigrateDatabase, Sqlite, SqlitePool};
 
 mod models;
-use models::Ranking;
 
 mod routes {
     pub mod index;
