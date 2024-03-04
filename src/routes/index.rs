@@ -1,13 +1,12 @@
-use actix_web::{get, web, HttpResponse, Responder};
-use web::Data;
+use actix_web::{get, HttpResponse, Responder};
 use std::fs::read_to_string;
 
-use crate::utils::Ranklist;
-
 #[get("/")]
-pub async fn index(db: Data<Ranklist>) -> impl Responder {
+pub async fn index() -> impl Responder {
+    println!("GET at /");
+    
     if let Ok(html) = read_to_string("./src/views/index.html") {
-        let body = html.replace("<!--data_length-->", db.len().to_string().as_str());
+        let body = html.replace("<!--data_length-->", "14227");
         
         return HttpResponse::Ok().body(
             body

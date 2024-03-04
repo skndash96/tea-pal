@@ -9,6 +9,13 @@
 body {
     font-size: calc(15px + 0.390625vw);
 }
+h1 { font-size: 1.4rem;}
+h2 { font-size: 1.3rem;}
+h3 { font-size: 1.2rem;}
+h4 { font-size: 1.1rem;}
+span, p, a, td, th, li, button, input, label {
+    font-size: 1rem;
+}
 
 a {
     text-decoration: none;

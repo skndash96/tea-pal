@@ -21,6 +21,11 @@
         background: var(--elevate);
     }
 
+    #container > h1  {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
     form {
         width: fit-content;
         margin: 2rem auto;
@@ -85,6 +90,7 @@
     </header>
 
     <div id="container">
+        <h1>Merit-based Admissions Data 2023 of TNEA Counselling</h1>
         <form id="query" action="">
             <h2> Query by Cutoff </h2>
             <p>
@@ -106,6 +112,10 @@
         </form>
 
         <div class="result_box" id="result">
+            <p>
+                The College_Name field shows the College the respective person has joined with their cutoff/rank. So, if you've scored a similar cutoff, there're good chances you'll get admission in the same, given that things have not changed presently. Use this information for a reference purposes only. The cutoff data is available for the range from 177 to 200.
+            </p><br/>
+            
             <span id="hint">Query Results:</span>
 
             <table></table>
@@ -113,15 +123,11 @@
     </div>
 
     <script>
-        window.branchMap = {"AD":"ARTIFICIAL INTELLIGENCE AND DATA SCIENCE","AE":"AERONAUTICAL ENGINEERING","AG":"AGRICULTURAL ENGINEERING","AL":"ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING","AM":"COMPUTER SCIENCE AND ENGINEERING (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)","AO":"AEROSPACE ENGINEERING","AP":"APPAREL TECHNOLOGY (SS)","AS":"AUTOMOBILE ENGINEERING (SS)","AT":"ARTIFICIAL INTELLIGENCE AND DATA SCIENCE (SS)","AU":"AUTOMOBILE ENGINEERING","BC":"BIO TECHNOLOGY AND BIO CHEMICAL ENGINEERING","BM":"BIO MEDICAL ENGINEERING","BP":"B.Plan","BS":"BIO TECHNOLOGY (SS)","BT":"BIO TECHNOLOGY","BY":"BIO MEDICAL ENGINEERING (SS)","CB":"COMPUTER SCIENCE AND BUSSINESS SYSTEM","CC":"CHEMICAL AND ELECTRO CHEMICAL  ENGINEERING (SS)","CD":"COMPUTER SCIENCE AND DESIGN","CE":"CIVIL  ENGINEERING","CF":"COMPUTER SCIENCE AND ENGINEERING (DATA SCIENCE)","CG":"COMPUTER SCIENCE AND ENGINEERING (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING) (SS)","CH":"CHEMICAL  ENGINEERING","CI":"COMPUTER SCIENCE AND ENGINEERING (INTERNET OF THINGS)","CJ":"M.Tech. COMPUTER SCIENCE AND ENGINEERING (Integrated 5 Years)","CL":"CHEMICAL  ENGINEERING (SS)","CM":"COMPUTER SCIENCE AND ENGINEERING (SS)","CN":"CIVIL  ENGINEERING (SS)","CO":"COMPUTER AND COMMUNICATION ENGINEERING","CR":"CERAMIC TECHNOLOGY (SS)","CS":"COMPUTER SCIENCE AND ENGINEERING","CT":"COMPUTER TECHNOLOGY","CW":"COMPUTER SCIENCE AND BUSINESS SYSTEM (SS)","CY":"CYBER SECURITY","CZ":"CIVIL AND STRUCTUTURAL ENGINEERING","EC":"ELECTRONICS AND COMMUNICATION ENGINEERING","EE":"ELECTRICAL AND ELECTRONICS ENGINEERING","EI":"ELECTRONICS AND INSTRUMENTATION ENGINEERING","EM":"ELECTRONICS AND COMMUNICATION ENGINEERING (SS)","EN":"ENVIRONMENTAL ENGINEERING","ES":"ELECTRICAL AND ELECTRONICS (SANDWICH) (SS)","ET":"ELECTRONICS AND TELECOMMUNICATION ENGINEERING","EY":"ELECTRICAL AND ELECTRONICS ENGINEERING (SS)","FD":"FOOD TECHNOLOGY","FS":"FOOD TECHNOLOGY (SS)","FT":"FASHION TECHNOLOGY","FY":"FASHION TECHNOLOGY (SS)","GI":"GEO INFORMATICS","HT":"HANDLOOM AND TEXTILE TECHNOLOGY","IB":"INDUSTRIAL BIO TECHNOLOGY","IC":"INSTRUMENTATION AND CONTROL ENGINEERING","IE":"INDUSTRIAL ENGINEERING","IM":"INFORMATION TECHNOLOGY (SS)","IN":"INDUSTRIAL ENGINEERING AND MANAGEMENT","IS":"INDUSTRIAL BIO TECHNOLOGY (SS)","IT":"INFORMATION TECHNOLOGY","IY":"INSTRUMENTATION AND CONTROL ENGINEERING (SS)","LE":"LEATHER TECHNOLOGY","MA":"MATERIAL SCIENCE AND ENGINEERING (SS)","MC":"MECHATRONICS","MD":"MEDICAL ELECTRONICS ENGINEERING","ME":"MECHANICAL ENGINEERING","MF":"MECHANICAL ENGINEERING (SS)","MG":"MECHATRONICS (SS)","MH":"MECHANICAL ENGINEERING (SANDWICH)","MI":"MINING ENGINEERING","MM":"MECHANICAL ENGINEERING (MANUFACTURING)","MN":"MANUFACTURING ENGINEERING","MO":"MECHANICAL AND MECHATRONICS ENGINEERING (ADDITIVE MANUFACTURING)","MR":"MARINE ENGINEERING","MS":"MECHANICAL ENGINEERING (SANDWICH) (SS)","MT":"METALLURGICAL ENGINEERING","MU":"MECHANICAL AND AUTOMATION ENGINEERING","MY":"METALLURGICAL ENGINEERING (SS)","MZ":"MECHATRONICS ENGINEERING","PA":"PLASTIC TECHNOLOGY","PC":"PETRO CHEMICAL TECHNOLOGY","PD":"PETRO CHEMICAL ENGINEERING","PE":"PETROLEUM ENGINEERING","PH":"PHARMACEUTICAL TECHNOLOGY","PM":"PHARMACEUTICAL TECHNOLOGY (SS)","PN":"PRODUCTION ENGINEERING (SS)","PP":"PETROLEUM ENGINEERING AND TECHNOLOGY (SS)","PR":"PRODUCTION ENGINEERING","PS":"PRODUCTION ENGINEERING (SANDWICH) (SS)","PT":"PRINTING AND PACKING TECHNOLOGY","RA":"ROBOTICS AND AUTOMATION (SS)","RM":"ROBOTICS AND AUTOMATION","RP":"RUBBER AND PLASTIC TECHNOLOGY","SB":"COMPUTER SCIENCE AND ENGINEERING (INTERNET OF THINGS AND CYBER SECURITY INCLUDING BLOCK CHAIN TECHNOLOGY)","SC":"COMPUTER SCIENCE AND ENGINEERING (CYBER SECURITY)","SE":"INFORMATION SCIENCE AND ENGINEERING","SF":"SAFETY AND FIRE ENGINEERING","TC":"TEXTILE CHEMISTRY","TS":"COMPUTER SCIENCE AND TECHNOLOGY","TT":"TEXTILE TECHNOLOGY (SS)","TX":"TEXTILE TECHNOLOGY","XC":"CIVIL ENGINEERING (TAMIL MEDIUM)","XM":"MECHANICAL ENGINEERING (TAMIL MEDIUM)","XS":"COMPUTER SCIENCE AND ENGINEERING (TAMIL)"};
-    </script>
-
-    <script>
         let form = document.getElementById("query");
         let table = document.querySelector("#result table");
         let hint = document.getElementById("hint");
 
-        const fields = ["name", "cutoff", "rank", "category", "college", "college_name", "college_city", "branch"];
+        // const fields = ["name", "cutoff", "rank", "category", "college", "college_name", "college_city", "branch"];
 
         form.addEventListener("submit", async (event) => {
             event.preventDefault();
@@ -136,10 +142,13 @@
             table.innerHTML = "";
 
             if (data.length) {
+                let fields = Object.keys(data[0]);
+                
                 let heading_row = document.createElement("tr");
+                
                 fields.forEach(f => {
                     let th = document.createElement("th");
-                    th.textContent = f.toUpperCase();
+                    th.textContent = f.toUpperCase().split("_").join(" ");
                     heading_row.appendChild(th);
                 });
                 table.appendChild(heading_row);
@@ -151,14 +160,6 @@
                         
                         if (f === "college_name") {
                             cell.innerHTML = `<a target="_blank" href="https://google.com/search?q=${encodeURI(item[f])}"> ${item[f]} </a>`
-                        } else if (f === "branch") {
-                            let abbr = window.branchMap[item[f]];
-                            abbr = abbr
-                                .split(/\s+/)
-                                .map(w => w[0] + w.toLowerCase().substring(1))
-                                .join(" ");
-                            
-                            cell.textContent = `${abbr} (${item[f]})`
                         } else {
                             cell.textContent = item[f];
                         }
