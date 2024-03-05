@@ -6,7 +6,7 @@ pub async fn index() -> impl Responder {
     println!("GET at /");
     
     if let Ok(html) = read_to_string("./src/views/index.html") {
-        let body = html.replace("<!--data_length-->", "14227");
+        let body = html.replace("<!--data_length-->", "14211");
         
         return HttpResponse::Ok().body(
             body

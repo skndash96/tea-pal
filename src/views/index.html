@@ -17,42 +17,58 @@
     }
 
     header {
-        padding: .5rem 1rem;
+        padding: .5rem;
+        background: var(--elevate)
+    }
+
+    #container {
+        padding: 1rem;
+    }
+
+    #container .title {
+        padding: 2rem 0;
+        text-align: center;
+    }
+
+    .form_box {
+        padding: 1rem;
+        margin: 0 auto;
+        width: fit-content;
+        max-width: 52rem;
+        line-height: 1.2rem;
         background: var(--elevate);
     }
 
-    #container > h1  {
-        text-align: center;
-        margin-top: 2rem;
+    .form_box>div {
+        margin: 1rem 0;
     }
 
     form {
-        width: fit-content;
-        margin: 2rem auto;
-        background: var(--elevate);
-        padding: 2rem;
-        max-width: 32rem;
+        margin: 3rem 1rem;
         display: flex;
         flex-direction: column;
         gap: 1rem;
-        line-height: 1.5rem;
     }
-
-    form button {
-        width: fit-content;
-        padding: 0 .5rem
+    form input, form select {
+        margin: .5rem 0;
+        background: var(--elevate);
+        color: white;
+        width: 100%;
+        max-width: 16rem;
     }
+    form select {color: initial !important;}
 
     #result {
-        padding: 2rem;
-        margin: 0 2rem;
-        border-top: 2px solid white;
+        margin: 2rem 0;
     }
 
     #result table {
-        /* table-layout: fixed; */
         border-collapse: collapse;
         border: 2px solid white;
+    }
+
+    #result>p {
+        padding: 1rem;
     }
 
     #result table th {
@@ -79,7 +95,9 @@
 
     #result td a {
         color: rgb(134, 178, 249);
-    }#result td a:visited {
+    }
+
+    #result td a:visited {
         color: rgb(61, 119, 212);
     }
 </style>
@@ -90,44 +108,89 @@
     </header>
 
     <div id="container">
-        <h1>Merit-based Admissions Data 2023 of TNEA Counselling</h1>
-        <form id="query" action="">
-            <h2> Query by Cutoff </h2>
-            <p>
-                <strong>What is Cutoff?</strong>
-                A parameter based on your HSC (Class XII) exam results that decides your admission into Engineering
-                colleges via TNEA Counselling.
-                <br /><br /> Cutoff mark in TNEA is calculated as
-                <br /> <code>= (Marks in Maths) + (Half of Marks in Physics) + (Half of Marks in Chemistry) </code>
-                <br />Max possible cutoff is 200.
-            </p>
-            <div>
-                <label for="cutoff"> Cutoff </label>
-                <input name="cutoff" class="classic" type="text" />
-            </div>
-            <div>
-                <label for="category"> Category </label>
-                <select name="category" class="classic" type="text">
-                    <option value="">Any</option>
-                    <option value="BC">BC</option>
-                    <option value="OC">OC</option>
-                    <option value="MBC">MBC</option>
-                    <option value="BCM">BCM</option>
-                    <option value="SC">SC</option>
-                    <option value="ST">ST</option>
-                </select>
-            </div>
-            <button class="classic" type="submit">Query</button>
+        <div class="title">
+            <h1>Merit-based Admissions Data 2023 of TNEA Counselling</h1>
+        </div>
 
-            <p>We have a collection of details of <!--data_length--> students and their respective colleges fetched from
-                TNEA Ofiicial site. </p>
-        </form>
+        <div class="form_box">
+            <div>
+                <h4> Query by Cutoff </h4>
+            </div>
 
-        <div class="result_box" id="result">
+            <div>
+                <p>
+                    <strong>What is Cutoff?</strong>
+                    A parameter based on your HSC (Class XII) exam results that decides your admission into Engineering
+                    colleges via TNEA Counselling.
+                    <br /><br /> Cutoff mark in TNEA is calculated as
+                    <br /> <code>= (Marks in Maths) + (Half of Marks in Physics) + (Half of Marks in Chemistry) </code>
+                    <br />Max possible cutoff is 200.
+                </p>
+            </div>
+
+            <div>
+                <p>We have a collection of details of <!--data_length--> students and their respective colleges fetched
+                    from TNEA Ofiicial site.</p>
+            </div>
+
+            <form id="ranklist_form">
+                <div>
+                    <label for="rank" for="cutoff"> By Cutoff/Rank </label>
+                    <input name="cutoff" class="classic" placeholder="Enter cutoff out of 200" type="text" />
+                    <span> OR </span>
+                    <input name="rank" class="classic" placeholder="Enter TNEA rank" type="text" />
+                </div>
+
+                <div>
+                    <label for="category"> Category </label>
+                    <select name="category" class="classic" type="text">
+                        <option value="">Any</option>
+                        <option value="BC">BC</option>
+                        <option value="OC">OC</option>
+                        <option value="MBC">MBC</option>
+                        <option value="BCM">BCM</option>
+                        <option value="SC">SC</option>
+                        <option value="ST">ST</option>
+                    </select>
+                </div>
+
+                <div>
+                    <button class="classic" type="submit">Query</button>
+                </div>
+            </form>
+
+            <form id="coll_form">
+                <div>
+                    <label for="coll_name">By College Name</label>
+                    <input name="coll_name" class="classic" type="text" placeholder="Search College name or City" />
+                </div>
+
+                <div>
+                    <button class="classic" type="submit">Query</button>
+                </div>
+            </form>
+
+            <form id="collinfo_form">
+                <div>
+                    <label for="coll_code">By College Code</label>
+                    <input name="coll_code" class="classic" type="number" placeholder="Enter College code" />
+                </div>
+
+                <div>
+                    <button class="classic" type="submit">Query</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="result">
             <p>
-                The College_Name field shows the College the respective person has joined with their cutoff/rank. So, if you've scored a similar cutoff, there're good chances you'll get admission in the same, given that things have not changed presently. Use this information for a reference purposes only. The cutoff data is available for the range from 177 to 200.
-            </p><br/>
-            
+                The College_Name field shows the College the respective person has joined with their cutoff/rank. So, if
+                you've scored a similar cutoff, there're good chances you'll get admission in the same, given that
+                things have not changed drastically in the present. Use this information for a reference purposes only.
+                The cutoff data
+                is available for the range from 177 to 200.
+            </p><br />
+
             <span id="hint">Query Results:</span>
 
             <table></table>
@@ -135,38 +198,77 @@
     </div>
 
     <script>
-        let form = document.getElementById("query");
+        let ranklist_form = document.getElementById("ranklist_form");
+        let coll_form = document.getElementById("coll_form");
+        let collinfo_form = document.getElementById("collinfo_form");
+
         let table = document.querySelector("#result table");
         let hint = document.getElementById("hint");
 
-        form.addEventListener("submit", async (event) => {
+        let hyperlink_field = ["college_name"];
+
+        ranklist_form.addEventListener("submit", (event) => {
             event.preventDefault();
 
-            let cutoff = form.querySelector("input[name=\'cutoff\']").value;
-            let category = form.querySelector("select[name=\'category\']").value;
+            let cutoff = ranklist_form.querySelector("input[name=\'cutoff\']").value;
+            let rank = ranklist_form.querySelector("input[name=\'rank\']").value;
+            let category = ranklist_form.querySelector("select[name=\'category\']").value;
 
-            function query_sub_str(name, val) {
-                if (val) return `${name}=${val}&`;
-                return "";
-            }
-
-            if (!cutoff) return alert("Invalid Input");
-
-            let response = await fetch(
+            if (!cutoff && !rank) return alert("Invalid Input: Need Cutoff/Rank value to query.");
+            
+            let [which, which_val] = rank ? ["rank", rank] : ["cutoff", cutoff];
+            
+            showQueryTable(
                 "/query?"
-                + query_sub_str("cutoff", cutoff)
+                + query_sub_str(which, which_val)
                 + query_sub_str("category", category)
             );
+        });
 
-            let data = await response.json();
+        coll_form.addEventListener("submit", (event) => {
+            event.preventDefault();
 
+            let name = coll_form.querySelector("input[name='coll_name']").value;
+
+            if (!name) return alert("Invalid Input: Need College name to query.");
+
+            showQueryTable(
+                "/query?"
+                + query_sub_str("college", name)
+            );
+        });
+
+        collinfo_form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            
+            let code = collinfo_form.querySelector("input[name='coll_code']").value;
+
+            if (!code) return alert("Invalid Input: Need College Code to query.");
+
+            showQueryTable(
+                "/query?"
+                + query_sub_str("coll_code", code)
+            );
+        });
+
+        function query_sub_str(name, val) {
+            if (val) return `${name}=${val}&`;
+            return "";
+        }
+
+        async function showQueryTable(url) {
+            table.innerHTML = "Loading...";
+            hint.textContent = "";
+
+            let data = await (await fetch(url)).json();
+            
             table.innerHTML = "";
-
+            
             if (data.length) {
                 let fields = Object.keys(data[0]);
-                
+
                 let heading_row = document.createElement("tr");
-                
+
                 fields.forEach(f => {
                     let th = document.createElement("th");
                     th.textContent = f.toUpperCase().split("_").join(" ");
@@ -178,20 +280,23 @@
                     let row = document.createElement("tr");
                     fields.forEach(f => {
                         let cell = document.createElement("td");
-                        
-                        if (f === "college_name") {
+
+                        if (hyperlink_field.includes(f)) {
                             cell.innerHTML = `<a target="_blank" href="https://google.com/search?q=${encodeURI(item[f])}"> ${item[f]} </a>`
                         } else {
                             cell.textContent = item[f];
                         }
+
                         row.appendChild(cell);
                     });
                     table.appendChild(row);
                 });
+
+                hint.textContent = `Showing ${data.length} Results:`;
             } else {
                 hint.textContent = "None Found";
             }
-        });
+        }
     </script>
 </body>
 

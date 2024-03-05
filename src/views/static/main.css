@@ -5,9 +5,14 @@
     font-family: sans-serif;
 }
 
+:root {
+    --elevate: #ffffff22;
+}
 
 body {
-    font-size: calc(15px + 0.390625vw);
+    background: black;
+    color: white;
+    font-size: 16px;
 }
 h1 { font-size: 1.4rem;}
 h2 { font-size: 1.3rem;}
@@ -26,9 +31,6 @@ input {
 }
 input.classic {
     padding: .1rem .5rem;
-}
-button.classic:hover {
-    transform: scale(0.9);
 }
 button, a, select {
     cursor: pointer;
