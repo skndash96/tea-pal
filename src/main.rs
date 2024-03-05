@@ -16,6 +16,8 @@ use routes::{
 };
 
 const DB_URL: &str = "sqlite://TNEA.db";
+
+const HOST: &str = "127.0.0.1";
 const PORT: u16 = 8080;
 
 #[actix_web::main]
@@ -26,14 +28,17 @@ async fn main() -> std::io::Result<()> {
     
     let db = SqlitePool::connect(DB_URL).await.expect("Database Connection Failed");
 
+    
+    println!( "Listening at {}:{}", HOST, PORT);
+
     HttpServer::new(move || {
         App::new()
-            .service(index)
-            .service(query)
-            .service(static_files)
-            .app_data(web::Data::new(db.to_owned()))
+        .service(index)
+        .service(query)
+        .service(static_files)
+        .app_data(web::Data::new(db.to_owned()))
     })
-    .bind(("127.0.0.1", PORT))?
+    .bind((HOST, PORT))?
     .run()
     .await
 }
