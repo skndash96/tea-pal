@@ -44,7 +44,6 @@ RUN xx-apk add --no-cache musl-dev gcc
 RUN --mount=type=bind,source=src,target=src \
     --mount=type=bind,source=Cargo.toml,target=Cargo.toml \
     --mount=type=bind,source=Cargo.lock,target=Cargo.lock \
-    --mount=type=bind,source=tnea.sqlite,target=/tnea.sqlite \
     --mount=type=cache,target=/app/target/,id=rust-cache-${APP_NAME}-${TARGETPLATFORM} \
     --mount=type=cache,target=/usr/local/cargo/git/db \
     --mount=type=cache,target=/usr/local/cargo/registry/ \
@@ -52,7 +51,11 @@ xx-cargo build --locked --release --target-dir ./target && \
 cp ./target/$(xx-cargo --print-target-triple)/release/$APP_NAME /bin/server && \
 xx-verify /bin/server
 
+RUN --mount=type=bind,source=tnea.sqlite,target=/tnea.sqlite \
+    --mount=type=bind,source=src/views/,target=src/views/
+
 COPY ./tnea.sqlite /
+COPY ./src/views/* /src/views/
 
 ################################################################################
 # Create a new stage for running the application that contains the minimal
@@ -82,6 +85,7 @@ USER appuser
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /bin/
 COPY --from=build /tnea.sqlite /
+COPY --from=build /src/views/* /src/views/
 
 # Expose the port that the application listens on.
 EXPOSE 8080

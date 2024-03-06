@@ -1,5 +1,6 @@
 use actix_web::{web, App, HttpServer};
 use sqlx::{self, migrate::MigrateDatabase, Sqlite, SqlitePool};
+use dotenv;
 
 mod models;
 
@@ -19,17 +20,19 @@ const DB_URL: &str = "./tnea.sqlite";
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenv::dotenv().ok();
+    
     if !Sqlite::database_exists(DB_URL).await.unwrap_or(false) {
         panic!("Database @{} does not exist", DB_URL);
     }
     
     let db = SqlitePool::connect(DB_URL).await.expect("Database Connection Failed");
 
-    println!( "Listening at {}:{}", HOST, PORT);
-
-    const HOST : &str = "0.0.0.0";
-    const PORT : u16 = 8080;
-
+    let host : String = dotenv::var("HOST").unwrap_or(String::from("0.0.0.0"));
+    let port : u16 = dotenv::var("PORT").unwrap_or("8080".to_string()).parse().expect("Given PORT is not valid.");
+    
+    println!( "Listening at {}:{}", host, port);
+    
     HttpServer::new(move || {
         App::new()
         .service(index)
@@ -37,7 +40,7 @@ async fn main() -> std::io::Result<()> {
         .service(static_files)
         .app_data(web::Data::new(db.to_owned()))
     })
-    .bind((HOST, PORT))?
+    .bind((host, port))?
     .run()
     .await
 }

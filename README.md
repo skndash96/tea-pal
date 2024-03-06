@@ -2,9 +2,10 @@
 Query TNEA Counselling Details of 2023 Round 1 by cutoff, rank or category.
 
 ## Usage GIF (2.5mb):
-![alt GIF of Webpage](https://github.com/skndash96/tea-pal/blob/main/src/views/static/sample.gif)
+![alt GIF of Webpage](https://github.com/skndash96/tea-pal/blob/main/src/views/sample.gif)
 
 # How to use?
+- Live @ https://tea-pal-skndash96.koyeb.app/
 - Fork the repo and setup rust (if needed) and hit `cargo run` on CLI.
 (or)
 - Deal with the docker image: https://hub.docker.com/repository/docker/skndash96/tea-pal/general
