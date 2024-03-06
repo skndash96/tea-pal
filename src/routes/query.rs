@@ -62,6 +62,7 @@ pub async fn query(q: Query<Options>, db: Data<SqlitePool>) -> impl Responder {
                 WHERE
                     College.id={code}
                     AND Ranklist.college=College.id
+                    AND Ranklist.branch=Branch.id
                 GROUP BY Ranklist.branch
                 LIMIT 100
                 "
