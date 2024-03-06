@@ -15,10 +15,7 @@ use routes::{
     static_files::static_files
 };
 
-const DB_URL: &str = "sqlite://TNEA.db";
-
-const HOST: &str = "127.0.0.1";
-const PORT: u16 = 8080;
+const DB_URL: &str = "./tnea.sqlite";
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -28,8 +25,10 @@ async fn main() -> std::io::Result<()> {
     
     let db = SqlitePool::connect(DB_URL).await.expect("Database Connection Failed");
 
-    
     println!( "Listening at {}:{}", HOST, PORT);
+
+    const HOST : &str = "0.0.0.0";
+    const PORT : u16 = 8080;
 
     HttpServer::new(move || {
         App::new()
