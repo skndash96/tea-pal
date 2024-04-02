@@ -47,6 +47,9 @@ RUN --mount=type=bind,source=src,target=src \
     --mount=type=cache,target=/app/target/,id=rust-cache-${APP_NAME}-${TARGETPLATFORM} \
     --mount=type=cache,target=/usr/local/cargo/git/db \
     --mount=type=cache,target=/usr/local/cargo/registry/ \
+cd frontend/ && \
+npm run build  && \
+cd .. && \
 xx-cargo build --locked --release --target-dir ./target && \
 cp ./target/$(xx-cargo --print-target-triple)/release/$APP_NAME /bin/server && \
 xx-verify /bin/server
@@ -91,4 +94,4 @@ COPY --from=build /src/views/* /src/views/
 EXPOSE 8080
 
 # What the container should run when it is started.
-CMD ["/bin/server"]
+CMD ["cd frontend && npm run build && cd ", "/bin/server"]
