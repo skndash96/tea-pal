@@ -1,4 +1,5 @@
-use actix_web::{web, App, HttpServer};
+use actix_web::{http::StatusCode, web::{self, Redirect}, App, HttpResponse, HttpServer, Result};
+use actix_cors::Cors;
 use sqlx::{self, migrate::MigrateDatabase, Sqlite, SqlitePool};
 use dotenv;
 
@@ -6,24 +7,26 @@ mod models;
 
 mod routes {
     pub mod index;
-    pub mod query;
-    pub mod static_files;
+    pub mod tnea;
+    pub mod josaa;
+    pub mod bundle;
 }
 
 use routes::{
     index::index,
-    query::query,
-    static_files::static_files
+    tnea,
+    josaa,
+    bundle
 };
 
-const DB_URL: &str = "./tnea.sqlite";
+const DB_URL: &str = "./db.sqlite";
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
     
     if !Sqlite::database_exists(DB_URL).await.unwrap_or(false) {
-        panic!("Database @{} does not exist", DB_URL);
+        panic!("Database at '{}' does not exist", DB_URL);
     }
     
     let db = SqlitePool::connect(DB_URL).await.expect("Database Connection Failed");
@@ -34,13 +37,26 @@ async fn main() -> std::io::Result<()> {
     println!( "Listening at {}:{}", host, port);
     
     HttpServer::new(move || {
+        let cors = Cors::default().allow_any_origin().send_wildcard();
+        
         App::new()
+        .wrap(cors)
         .service(index)
-        .service(query)
-        .service(static_files)
+        .service(tnea::query)
+        .service(josaa::query)
+        .service(bundle::static_files)
         .app_data(web::Data::new(db.to_owned()))
+        .default_service(
+            web::route().to(not_found)
+        )
     })
     .bind((host, port))?
     .run()
     .await
+}
+
+async fn not_found() -> Result<HttpResponse> {
+    Ok(
+        HttpResponse::build(StatusCode::NOT_FOUND).content_type("text/html; charset=utf-8").body("<html><body><a href='/'>  You are lost. Go HOME.  </a></body></html>")
+    )
 }
