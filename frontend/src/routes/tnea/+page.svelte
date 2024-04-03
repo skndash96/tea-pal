@@ -1,7 +1,7 @@
 <script>
     import List from "$lib/List.svelte";
 
-    const QUERY_PREFIX = "http://127.0.0.1:8080/query?";
+    const QUERY_PREFIX = "/api/tnea?";
 
     let /**@type {"by_cutoff"|"by_rank"|"by_college"|"by_coll_code"}*/ by,
         /**@type {number}*/ cutoff, //within [0,200]

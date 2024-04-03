@@ -14,7 +14,7 @@ struct Options {
     coll_code: Option<String>,
 }
 
-#[get("/query")]
+#[get("/api/tnea")]
 pub async fn query(q: Query<Options>, db: Data<SqlitePool>) -> impl Responder {
     let q = q.into_inner();
 

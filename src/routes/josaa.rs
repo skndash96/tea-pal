@@ -14,7 +14,6 @@ use web::{Data, Query};
 type Options = HashMap<String, String>;
 enum CMP {
     GTE,
-    LTE,
     EQ,
     LIKE,
 }
@@ -22,7 +21,6 @@ impl Display for CMP {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let s = match self {
             Self::GTE => ">=",
-            Self::LTE => "<=",
             Self::EQ => "=",
             Self::LIKE => "LIKE",
         };
@@ -30,7 +28,7 @@ impl Display for CMP {
     }
 }
 
-#[get("/josaa")]
+#[get("/api/josaa")]
 pub async fn query(q: Query<Options>, db: Data<SqlitePool>) -> impl Responder {
     let q = q.into_inner();
 

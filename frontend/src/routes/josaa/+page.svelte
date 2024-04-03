@@ -13,6 +13,7 @@
      * round
      */
     let
+        /**@type {"by_all|by_name|by_branch"}*/
         /**@type {string|null}*/institute,
         /**@type {string|null}*/course,
         /**@type {"HS"|"OS"|"AI"|null}*/quota, //no support for other quotas
@@ -23,7 +24,7 @@
         /**@type {1|2|3|4|5|6|null}*/round,
         /**@type {Promise<any[]> | null}*/results;
 
-    const URL_PREFIX = "/josaa?";
+    const URL_PREFIX = "/api/josaa?";
 
     /**@param {SubmitEvent} e */
     function handleSubmit(e) {
