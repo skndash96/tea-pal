@@ -1,4 +1,4 @@
-use actix_web::{http::StatusCode, web::{self, Redirect}, App, HttpResponse, HttpServer, Result};
+use actix_web::{web, App, HttpServer};
 use actix_cors::Cors;
 use sqlx::{self, migrate::MigrateDatabase, Sqlite, SqlitePool};
 use dotenv;
@@ -10,13 +10,15 @@ mod routes {
     pub mod tnea;
     pub mod josaa;
     pub mod bundle;
+    pub mod not_found;
 }
 
 use routes::{
     index::index,
     tnea,
     josaa,
-    bundle
+    bundle,
+    not_found::not_found
 };
 
 const DB_URL: &str = "./db.sqlite";
@@ -34,7 +36,7 @@ async fn main() -> std::io::Result<()> {
     let host : String = dotenv::var("HOST").unwrap_or(String::from("0.0.0.0"));
     let port : u16 = dotenv::var("PORT").unwrap_or("8080".to_string()).parse().expect("Given PORT is not valid.");
     
-    println!( "Listening at {}:{}", host, port);
+    println!( "Listening at http://{}:{}", host, port);
     
     HttpServer::new(move || {
         let cors = Cors::default().allow_any_origin().send_wildcard();
@@ -53,10 +55,4 @@ async fn main() -> std::io::Result<()> {
     .bind((host, port))?
     .run()
     .await
-}
-
-async fn not_found() -> Result<HttpResponse> {
-    Ok(
-        HttpResponse::build(StatusCode::NOT_FOUND).content_type("text/html; charset=utf-8").body("<html><body><a href='/'>  You are lost. Go HOME.  </a></body></html>")
-    )
 }

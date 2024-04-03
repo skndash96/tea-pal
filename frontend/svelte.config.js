@@ -4,8 +4,8 @@ import adapter from '@sveltejs/adapter-static';
 const config = {
 	kit: {
 		adapter: adapter({
-			pages: '../src/views/',
-			assets: '../src/views/',
+			pages: '../views/',
+			assets: '../views/',
 			fallback: "index.html",
 			precompress: false,
 			strict: true

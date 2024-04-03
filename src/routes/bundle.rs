@@ -6,11 +6,14 @@ use std::path::PathBuf;
 
 #[get("/{filename:_app/.*}")]
 async fn static_files(req: HttpRequest) -> Result<NamedFile> {
-    println!("{:?}", req);
-    let path = String::from("src/views/") + req.match_info().query("filename");
-    println!("{}", path);
+    let filename = req.match_info().query("filename");
+    let path = String::from("views/") + filename;
+
+    println!("GET /{}", path);
     
     let path: PathBuf = path.parse().unwrap();
+
+    println!("{:?}", path);
 
     Ok(NamedFile::open(path)?)
 }

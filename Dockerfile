@@ -47,18 +47,12 @@ RUN --mount=type=bind,source=src,target=src \
     --mount=type=cache,target=/app/target/,id=rust-cache-${APP_NAME}-${TARGETPLATFORM} \
     --mount=type=cache,target=/usr/local/cargo/git/db \
     --mount=type=cache,target=/usr/local/cargo/registry/ \
-cd frontend/ && \
-npm run build  && \
-cd .. && \
 xx-cargo build --locked --release --target-dir ./target && \
 cp ./target/$(xx-cargo --print-target-triple)/release/$APP_NAME /bin/server && \
 xx-verify /bin/server
 
-RUN --mount=type=bind,source=tnea.sqlite,target=/tnea.sqlite \
-    --mount=type=bind,source=src/views/,target=src/views/
-
-COPY ./tnea.sqlite /
-COPY ./src/views/* /src/views/
+COPY ./db.sqlite /
+COPY ./views /views
 
 ################################################################################
 # Create a new stage for running the application that contains the minimal
@@ -87,11 +81,11 @@ USER appuser
 
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /bin/
-COPY --from=build /tnea.sqlite /
-COPY --from=build /src/views/* /src/views/
+COPY --from=build /db.sqlite /
+COPY --from=build /views /views
 
 # Expose the port that the application listens on.
 EXPOSE 8080
 
 # What the container should run when it is started.
-CMD ["cd frontend && npm run build && cd ", "/bin/server"]
+CMD ["/bin/server"]
