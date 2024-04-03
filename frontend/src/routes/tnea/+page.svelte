@@ -73,10 +73,10 @@
     <h2>TNEA Counselling Stats</h2>
 
     <select name="query_by" bind:value={by}>
-        <option selected value="by_cutoff"> By Cutoff </option>
-        <option value="by_rank"> By Rank </option>
-        <option value="by_college"> By College Name </option>
-        <option value="by_coll_code"> By College code </option>
+        <option selected value="by_cutoff"> Query By Cutoff </option>
+        <option value="by_rank"> Query By Rank </option>
+        <option value="by_college"> Query By College Name </option>
+        <option value="by_coll_code"> Query By College code </option>
     </select>
 
     <form on:submit|preventDefault={handleSubmit}>

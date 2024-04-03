@@ -7,6 +7,8 @@
 </script>
 
 <div>
+    <span> Showing {rows.length} Records </span>
+    
     <table>
         <thead>
             {#each Object.keys(rows[0]) as field}
