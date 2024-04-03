@@ -2,6 +2,10 @@
 
 </script>
 
+<svelte:head>
+    <title> TEA-PAL </title>
+</svelte:head>
+
 <div>
     <a href="/tnea">TNEA Counselling</a>
     <a href="/josaa">JOSAA Counselling</a>

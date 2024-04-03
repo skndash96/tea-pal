@@ -67,6 +67,8 @@
 
 <svelte:head>
     <title>TNEA Counselling</title>
+    <meta name="title" content="TNEA Counselling Query" />
+    <meta name="description" content="Query the TNEA Counselling results of 2023 for aid in decision of your counselling list." />
 </svelte:head>
 
 <div class="container">    

@@ -64,6 +64,12 @@
     }
 </script>
 
+<svelte:head>
+    <title>JOSAA Counselling</title>
+    <meta name="title" content="JOSAA Counselling Query" />
+    <meta name="description" content="Query the TNEA Counselling results (2016-23) for aid in decision of your counselling list." />
+</svelte:head>
+
 <div class="container">
     <h2>JOSAA Counselling Query</h2>
 

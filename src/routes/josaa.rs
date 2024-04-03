@@ -48,6 +48,7 @@ pub async fn query(q: Query<Options>, db: Data<SqlitePool>) -> impl Responder {
     } else {
         "500".to_string()
     };
+    let by_rank = q.get("rank").is_some();
 
     let mut query = "SELECT * FROM JOSAA WHERE year > 2000 ".to_string();
 
@@ -59,13 +60,26 @@ pub async fn query(q: Query<Options>, db: Data<SqlitePool>) -> impl Responder {
     {
         query += format!(
             "AND {} {cmp} {} ",
-            if key == "rank" { String::from("\"or\"") } else { key },
-            if *pad_apos { format!("'%{}%'", val) } else { val }
+            if key == "rank" {
+                String::from("\"or\"")
+            } else {
+                key
+            },
+            if *pad_apos {
+                format!("'%{}%'", val)
+            } else {
+                val
+            }
         )
         .as_str();
     }
 
-    query += format!("LIMIT {};", limit).as_str();
+    query += format!(
+        "{} LIMIT {} --case-insensitive;",
+        if by_rank { "ORDER BY \"or\" ASC" } else { "" },
+        limit
+    )
+    .as_str();
 
     println!("{}", query);
     let fetch = sqlx::query_as::<_, JosaaItem>(query.as_str())

@@ -7,7 +7,7 @@
 </script>
 
 <div>
-    <span> Showing {rows.length} Records </span>
+    <span style="margin-left: 2rem;"> Showing {rows.length} Records </span>
     
     <table>
         <thead>
