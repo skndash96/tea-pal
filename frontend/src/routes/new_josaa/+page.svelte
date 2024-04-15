@@ -48,7 +48,8 @@
             + get_sub_str("rank", rank)
             + get_sub_str("year", year)
             + get_sub_str("round", round);
-        alert(url);
+        
+        console.log(url);
 
         results = new Promise(async (res,rej) => {
             try {
@@ -77,6 +78,12 @@
         }
     }
 </script>
+
+<svelte:head>
+    <title>JOSAA Counselling</title>
+    <meta name="title" content="JOSAA Counselling Query" />
+    <meta name="description" content="Query the TNEA Counselling results (2016-23) for aid in decision of your counselling list." />
+</svelte:head>
 
 <div class="container">
     <h1> JOSAA Counselling </h1>
