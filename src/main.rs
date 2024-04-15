@@ -9,7 +9,7 @@ mod routes {
     pub mod index;
     pub mod tnea;
     pub mod josaa;
-    pub mod bundle;
+    pub mod frontend;
     pub mod not_found;
 }
 
@@ -17,7 +17,7 @@ use routes::{
     index::index,
     tnea,
     josaa,
-    bundle,
+    frontend,
     not_found::not_found
 };
 
@@ -46,7 +46,7 @@ async fn main() -> std::io::Result<()> {
         .service(index)
         .service(tnea::query)
         .service(josaa::query)
-        .service(bundle::static_files)
+        .service(frontend::files)
         .app_data(web::Data::new(db.to_owned()))
         .default_service(
             web::route().to(not_found)

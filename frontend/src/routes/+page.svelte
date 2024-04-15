@@ -7,8 +7,9 @@
 </svelte:head>
 
 <div>
-    <a href="/tnea">TNEA Counselling</a>
-    <a href="/josaa">JOSAA Counselling</a>
+    <a href="/tnea.html">TNEA Counselling</a>
+    <a href="/josaa.html">JOSAA Counselling</a>
+    <a href="/new_josaa.html">New UI | JOSAA Counselling</a>
 </div>
 
 <style>

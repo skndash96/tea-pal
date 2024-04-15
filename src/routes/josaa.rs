@@ -12,11 +12,19 @@ use web::{Data, Query};
 //change or = cr = 0 for about 4856 records because it had or = cr = nP (NaN) (preparatory list)
 
 type Options = HashMap<String, String>;
+
+enum Chain {
+    AND,
+    OR,
+}
+
+#[derive(Clone, Copy)]
 enum CMP {
     GTE,
     EQ,
     LIKE,
 }
+
 impl Display for CMP {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let s = match self {
@@ -32,56 +40,77 @@ impl Display for CMP {
 pub async fn query(q: Query<Options>, db: Data<SqlitePool>) -> impl Responder {
     let q = q.into_inner();
 
-    let fields = HashMap::from([
-        ("name", (CMP::LIKE, true)),
-        ("course", (CMP::LIKE, true)),
-        ("quota", (CMP::LIKE, true)),
-        ("seat", (CMP::LIKE, true)),
-        ("gender", (CMP::LIKE, true)),
-        ("rank", (CMP::GTE, false)),
-        ("year", (CMP::EQ, false)),
-        ("round", (CMP::EQ, false)),
-    ]);
+    let mut query = String::from("SELECT * FROM josaa WHERE 1 = 1");
+
+    query += get_sql_str(Chain::AND, "name", q.get("name"), CMP::LIKE, "'", true).as_str();
+    query += get_sql_str(Chain::AND, "course", q.get("course"), CMP::LIKE, "'", true).as_str();
+    query += get_sql_str(Chain::AND, "quota", q.get("quota"), CMP::LIKE, "'", true).as_str();
+    query += get_sql_str(Chain::AND, "seat", q.get("seat"), CMP::LIKE, "'", false).as_str();
+    query += get_sql_str(Chain::AND, "gender", q.get("gender"), CMP::LIKE, "'", false).as_str();
+    query += get_sql_str(Chain::AND, "\"or\"", q.get("rank"), CMP::GTE, "", false).as_str();
+    query += get_sql_str(Chain::AND, "year", q.get("year"), CMP::EQ, "", true).as_str();
+    query += get_sql_str(Chain::AND, "round", q.get("round"), CMP::EQ, "", true).as_str();
+
+    fn get_sql_str<'a>(
+        chain: Chain,
+        field: &'a str,
+        val: Option<&String>,
+        cmp: CMP,
+        enclose: &'a str,
+        many: bool,
+    ) -> String {
+        let is_like = match cmp {
+            CMP::LIKE => true,
+            _ => false,
+        };
+
+        if let Some(val) = val {
+            if many {
+                let val = val.split(";");
+                
+                let mut s = String::from(" AND (1=2");
+
+                for v in val {
+                    s += get_sql_str(Chain::OR, field, Some(&v.to_string()), cmp, enclose, false).as_str();
+                }
+                s += ")";
+
+                return s;
+            } else {
+                let s = format!(
+                    " {} {field} {cmp} {}{val}{}",
+                    match chain {
+                        Chain::AND => "AND",
+                        Chain::OR => "OR",
+                    },
+                    if is_like { "'%" } else { enclose },
+                    if is_like { "%'" } else { enclose }
+                );
+
+                return s;
+            }
+        } else {
+            return String::new();
+        }
+    }
 
     let limit = if let Some(l) = q.get("limit") {
         l.clone()
     } else {
         "500".to_string()
     };
+    
     let by_rank = q.get("rank").is_some();
-
-    let mut query = "SELECT * FROM JOSAA WHERE year > 2000 ".to_string();
-
-    for ((cmp, pad_apos), key, val) in q
-        .into_iter()
-        .map(|x| (fields.get(x.0.as_str()), x.0, x.1))
-        .filter(|x| x.0.is_some())
-        .map(|x| (x.0.unwrap(), x.1, x.2))
-    {
-        query += format!(
-            "AND {} {cmp} {} ",
-            if key == "rank" {
-                String::from("\"or\"")
-            } else {
-                key
-            },
-            if *pad_apos {
-                format!("'%{}%'", val)
-            } else {
-                val
-            }
-        )
-        .as_str();
-    }
 
     query += format!(
         "{} LIMIT {} --case-insensitive;",
-        if by_rank { "ORDER BY \"or\" ASC" } else { "" },
+        if by_rank { " ORDER BY \"or\" ASC" } else { "" },
         limit
     )
     .as_str();
 
     println!("{}", query);
+    
     let fetch = sqlx::query_as::<_, JosaaItem>(query.as_str())
         .fetch_all(&**db)
         .await;
