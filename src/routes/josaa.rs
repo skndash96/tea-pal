@@ -1,7 +1,11 @@
-use std::{collections::HashMap, fmt::Display};
+use std::{collections::HashMap, fmt::Display, time::Instant};
 
 use crate::models::JosaaItem;
-use actix_web::{get, web, HttpResponse, Responder};
+use actix_web::{
+    get,
+    web,
+    HttpResponse, Responder,
+};
 use sqlx::{self, sqlite::SqlitePool};
 use web::{Data, Query};
 
@@ -17,10 +21,19 @@ enum Chain {
     AND,
     OR,
 }
+impl Display for Chain {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
+            Self::AND => "AND",
+            Self::OR => "OR"
+        };
+        f.write_str(s)
+    }
+}
 
 #[derive(Clone, Copy)]
 enum CMP {
-    GTE,
+    LTE,
     EQ,
     LIKE,
 }
@@ -28,69 +41,84 @@ enum CMP {
 impl Display for CMP {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let s = match self {
-            Self::GTE => ">=",
+            Self::LTE => "<=",
             Self::EQ => "=",
             Self::LIKE => "LIKE",
         };
         f.write_str(s)
     }
 }
+impl CMP {
+    fn enclose<'a>(&self) -> &'a str {
+        match self {
+            Self::LIKE => "'",
+            _ => "",
+        }
+    }
+}
 
 #[get("/api/josaa")]
 pub async fn query(q: Query<Options>, db: Data<SqlitePool>) -> impl Responder {
+    let start = Instant::now();
+
+    println!("Framing query {:?}", start.elapsed());
+
     let q = q.into_inner();
 
-    let mut query = String::from("SELECT * FROM josaa WHERE 1 = 1");
+    let mut query = String::from("SELECT * FROM josaa WHERE true");
 
-    query += get_sql_str(Chain::AND, "name", q.get("name"), CMP::LIKE, "'", true).as_str();
-    query += get_sql_str(Chain::AND, "course", q.get("course"), CMP::LIKE, "'", true).as_str();
-    query += get_sql_str(Chain::AND, "quota", q.get("quota"), CMP::LIKE, "'", true).as_str();
-    query += get_sql_str(Chain::AND, "seat", q.get("seat"), CMP::LIKE, "'", false).as_str();
-    query += get_sql_str(Chain::AND, "gender", q.get("gender"), CMP::LIKE, "'", false).as_str();
-    query += get_sql_str(Chain::AND, "\"or\"", q.get("rank"), CMP::GTE, "", false).as_str();
-    query += get_sql_str(Chain::AND, "year", q.get("year"), CMP::EQ, "", true).as_str();
-    query += get_sql_str(Chain::AND, "round", q.get("round"), CMP::EQ, "", true).as_str();
+    let fields = [
+        ("name", CMP::LIKE, true),
+        ("course", CMP::LIKE, true),
+        ("quota", CMP::LIKE, true),
+        ("seat", CMP::LIKE, false),
+        ("gender", CMP::LIKE, false),
+        ("cr", CMP::LTE, false),
+        ("year", CMP::EQ, true),
+        ("round", CMP::EQ, true),
+    ];
+
+    for (f, cmp, multiple) in fields {
+        if let Some(val) = q.get(f) {
+            query += get_sql_str(Chain::AND, f, val, cmp, multiple).as_str();
+        }
+    }
 
     fn get_sql_str<'a>(
         chain: Chain,
         field: &'a str,
-        val: Option<&String>,
+        val: &String,
         cmp: CMP,
-        enclose: &'a str,
-        many: bool,
+        multiple: bool,
     ) -> String {
         let is_like = match cmp {
             CMP::LIKE => true,
             _ => false,
         };
-
-        if let Some(val) = val {
-            if many {
-                let val = val.split(";");
-                
-                let mut s = String::from(" AND (1=2");
-
-                for v in val {
-                    s += get_sql_str(Chain::OR, field, Some(&v.to_string()), cmp, enclose, false).as_str();
-                }
-                s += ")";
-
-                return s;
-            } else {
-                let s = format!(
-                    " {} {field} {cmp} {}{val}{}",
-                    match chain {
-                        Chain::AND => "AND",
-                        Chain::OR => "OR",
-                    },
-                    if is_like { "'%" } else { enclose },
-                    if is_like { "%'" } else { enclose }
-                );
-
-                return s;
+        
+        if multiple {
+            let val = val.split(";");
+            
+            let mut s = String::from(" AND (false");
+            
+            for v in val {
+                s += get_sql_str(Chain::OR, field, &v.to_string(), cmp, false)
+                    .as_str();
             }
+            s += ")";
+            
+            return s;
         } else {
-            return String::new();
+            let enclose = cmp.enclose();
+
+            let s = format!(
+                " {} {field} {cmp} {}{val}{}",
+                chain,
+                if is_like { "'%" } else { enclose },
+                if is_like { "%'" } else { enclose }
+            );
+
+            return s;
         }
     }
 
@@ -99,21 +127,25 @@ pub async fn query(q: Query<Options>, db: Data<SqlitePool>) -> impl Responder {
     } else {
         "500".to_string()
     };
-    
-    let by_rank = q.get("rank").is_some();
+
+    let by_rank = q.get("cr").is_some();
 
     query += format!(
         "{} LIMIT {} --case-insensitive;",
-        if by_rank { " ORDER BY \"or\" ASC" } else { "" },
+        if by_rank { " ORDER BY cr DESC" } else { "" },
         limit
     )
     .as_str();
 
     println!("{}", query);
-    
+
+    println!("Starting Query {:?}", start.elapsed());
+
     let fetch = sqlx::query_as::<_, JosaaItem>(query.as_str())
         .fetch_all(&**db)
         .await;
+
+    println!("Query Over {:?}", start.elapsed());
 
     if let Ok(data) = fetch {
         return HttpResponse::Ok().json(data);

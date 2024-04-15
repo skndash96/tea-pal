@@ -791,6 +791,7 @@ table {
     border-collapse: collapse;
     margin-left: 2rem;
     margin-right: 2rem;
+    width: fit-content;
 }
 table.striped tr:nth-child(odd) {
     background: var(--elevate);

@@ -7,7 +7,7 @@
         /**@type {"HS"|"OS"|"AI" []}*/ quota = [],
         /**@type {"OPEN"|"EWS"|"OBC-NCL"|"SC"|"ST"|"PwD"|""}*/ seat = "",
         /**@type {"neutral"|"female"|""}*/ gender = "",
-        /**@type {number|null}*/ rank = null,
+        /**@type {number|null}*/ cr = null,
         /**@type {2016|2017|2018|2019|2020|2021|2022|2023 []}*/ year = [],
         /**@type {1|2|3|4|5|6 []}*/ round = [],
         /**@type {Promise<any[]> | null}*/ results = null;
@@ -45,7 +45,7 @@
             + get_sub_str("quota", quota)
             + get_sub_str("seat", seat)
             + get_sub_str("gender", gender)
-            + get_sub_str("rank", rank)
+            + get_sub_str("cr", cr)
             + get_sub_str("year", year)
             + get_sub_str("round", round);
         
@@ -176,13 +176,13 @@
         </div>
 
         <div class="flex-col">
-            <label for="rank"> Opening Rank </label>
+            <label for="rank"> Closing Rank </label>
 
             <input
                 name="rank"
                 placeholder="Eg. 14000"
                 type="number"
-                bind:value={rank}
+                bind:value={cr}
             />
         </div>
 

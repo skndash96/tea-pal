@@ -10,7 +10,7 @@
     <span style="margin-left: 2rem;"> Showing {rows.length} Records </span>
 
     <div class="table">
-        <table>
+        <table class="striped">
             <thead>
                 {#each Object.keys(rows[0]) as field}
                     <th> {field} </th>
