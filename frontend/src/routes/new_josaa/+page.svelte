@@ -88,7 +88,7 @@
 <div class="container">
     <h1> JOSAA Counselling </h1>
 
-    <form class="container centered" style="max-width: 40rem;" on:submit|preventDefault={handleSubmit}>
+    <form class="container centered" style="max-width: 48rem;" on:submit|preventDefault={handleSubmit}>
         <div>
             <label for="institute">Institute</label>
 

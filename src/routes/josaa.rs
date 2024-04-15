@@ -59,15 +59,12 @@ impl CMP {
 
 #[get("/api/josaa")]
 pub async fn query(q: Query<Options>, db: Data<SqlitePool>) -> impl Responder {
-    let start = Instant::now();
-
-    println!("Framing query {:?}", start.elapsed());
-
     let q = q.into_inner();
 
     let mut query = String::from("SELECT * FROM josaa WHERE true");
 
     let fields = [
+        //field compare multiple(sql OR)
         ("name", CMP::LIKE, true),
         ("course", CMP::LIKE, true),
         ("quota", CMP::LIKE, true),
@@ -139,13 +136,9 @@ pub async fn query(q: Query<Options>, db: Data<SqlitePool>) -> impl Responder {
 
     println!("{}", query);
 
-    println!("Starting Query {:?}", start.elapsed());
-
     let fetch = sqlx::query_as::<_, JosaaItem>(query.as_str())
         .fetch_all(&**db)
         .await;
-
-    println!("Query Over {:?}", start.elapsed());
 
     if let Ok(data) = fetch {
         return HttpResponse::Ok().json(data);

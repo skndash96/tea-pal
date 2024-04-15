@@ -1,8 +1,9 @@
 # TEA pal
 Query TNEA and JOSAA Counselling Details.
 
-## Usage GIF (453kb):
-![alt GIF of Webpage](https://i.ibb.co/pd9vPwQ/tea-pal-readme.gif)
+## Usage Video - JOSAA (8mb)
+
+https://github.com/skndash96/tea-pal/assets/78152517/6169a744-f41c-4bcb-a30c-8bff2888c061
 
 # How to use?
 - Live @ https://tea-pal-skndash96.koyeb.app/
@@ -24,8 +25,9 @@ Query TNEA and JOSAA Counselling Details.
 - limit=[number]
 - college=[text]
 - coll_code=[number]
+
 ## JOSAA: `/api/josaa?`
-- rank=[number]    (lower bound of rank)
+- cr=[number]    (upper bound of rank)
 - name=[text]
 - course=[text]
 - quota=[text] (HS,OS,AI,AP,JK,GO,LA)
