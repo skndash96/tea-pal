@@ -88,9 +88,15 @@
 <div class="container">
     <h1> JOSAA Counselling </h1>
 
-    <form class="container centered" style="max-width: 48rem;" on:submit|preventDefault={handleSubmit}>
-        <div>
-            <label for="institute">Institute</label>
+    <form class="container centered" style="max-width: 32rem; width: 100%;" on:submit|preventDefault={handleSubmit}>
+        <div style="text-align: left;">
+            <label for="institute">
+                Institute
+                <span>
+                    ?
+                    <small class="tooltip"> Add institute names. Avoid abbreviations like NIT, IIT. A word like 'National' would do. </small>
+                </span>
+            </label>
 
             <div>
                 <ul class="flex-row wrap">
@@ -115,8 +121,14 @@
             </div>
         </div>
 
-        <div>
-            <label for="course">Course</label>
+        <div style="text-align: left;">
+            <label for="course">
+                Course
+                <span>
+                    ?
+                    <small class="tooltip"> Add courses. Just a word like 'Computer' would do.  Avoid abbreviations like CS. </small>
+                </span>
+            </label>
             <div>
                 <ul class="flex-row">
                     {#each course as name, i}
@@ -139,11 +151,15 @@
             </div>
         </div>
 
-        <div class="flex-col">
+        <div style="text-align: left;" class="flex-col">
             <label for="quota">
                 Quota
+                <span>
+                    ?
+                    <small class="tooltip"> Select quota. If a particular inst. is selected in name of the inst., then select HS or OS. If not leave this. </small>
+                </span>
             </label>
-            
+
             <select name="quota" bind:value={quota} multiple>
                 <option value="HS"> HS (Home State) </option>
                 <option value="OS"> OS (Other State) </option>
@@ -151,7 +167,7 @@
             </select>
         </div>
         
-        <div class="flex-col">
+        <div style="text-align: left;" class="flex-col">
             <label for="seat"> Select Seat Type </label>
 
             <select name="seat" bind:value={seat}>
@@ -165,8 +181,10 @@
             </select>
         </div>
 
-        <div class="flex-col">
-            <label for="gender"> Select Gender </label>
+        <div style="text-align: left;" class="flex-col">
+            <label for="gender">
+                Select Gender
+            </label>
 
             <select name="gender" bind:value={gender}>
                 <option value="" selected> Any </option>
@@ -175,8 +193,14 @@
             </select>
         </div>
 
-        <div class="flex-col">
-            <label for="rank"> Closing Rank </label>
+        <div style="text-align: left;" class="flex-col">
+            <label for="rank">
+                Closing Rank
+                <span>
+                    ?
+                    <small class="tooltip"> Upper limit of Rank. Results are shown in Descending order lesser than the input. </small>
+                </span>
+            </label>
 
             <input
                 name="rank"
@@ -186,7 +210,7 @@
             />
         </div>
 
-        <div class="flex-col">
+        <div style="text-align: left;" class="flex-col">
             <label for="year">Year</label>
 
             <select name="year" bind:value={year} multiple>
@@ -196,7 +220,7 @@
             </select>
         </div>
 
-        <div class="flex-col">
+        <div style="text-align: left;" class="flex-col">
             <label for="round">Round</label>
             <select name="round" bind:value={round} multiple>
                 {#each [1, 2, 3, 4, 5, 6] as r}
