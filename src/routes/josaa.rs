@@ -33,7 +33,7 @@ impl Display for Chain {
 
 #[derive(Clone, Copy)]
 enum CMP {
-    LTE,
+    GTE,
     EQ,
     LIKE,
 }
@@ -41,7 +41,7 @@ enum CMP {
 impl Display for CMP {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let s = match self {
-            Self::LTE => "<=",
+            Self::GTE => ">=",
             Self::EQ => "=",
             Self::LIKE => "LIKE",
         };
@@ -70,7 +70,7 @@ pub async fn query(q: Query<Options>, db: Data<SqlitePool>) -> impl Responder {
         ("quota", CMP::LIKE, true),
         ("seat", CMP::LIKE, false),
         ("gender", CMP::LIKE, false),
-        ("cr", CMP::LTE, false),
+        ("cr", CMP::GTE, false),
         ("year", CMP::EQ, true),
         ("round", CMP::EQ, true),
     ];
