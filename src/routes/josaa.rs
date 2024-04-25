@@ -129,7 +129,7 @@ pub async fn query(q: Query<Options>, db: Data<SqlitePool>) -> impl Responder {
 
     query += format!(
         "{} LIMIT {} --case-insensitive;",
-        if by_rank { " ORDER BY cr DESC" } else { "" },
+        if by_rank { " ORDER BY cr ASC" } else { "" },
         limit
     )
     .as_str();
