@@ -163,7 +163,7 @@
             <select name="quota" bind:value={quota} multiple>
                 <option value="HS"> HS (Home State) </option>
                 <option value="OS"> OS (Other State) </option>
-                <option value="AI"> AI (All India - for IITs and IIITs) </option>
+                <option value="AI" selected> AI (All India - for IITs and IIITs) </option>
             </select>
         </div>
         
@@ -171,8 +171,8 @@
             <label for="seat"> Select Seat Type </label>
 
             <select name="seat" bind:value={seat}>
-                <option value="" selected> Any </option>
-                <option value="OPEN"> OPEN </option>
+                <option value=""> Any </option>
+                <option value="OPEN" selected> OPEN </option>
                 <option value="EWS"> EWS </option>
                 <option value="OBC-NCL"> OBC-NCL </option>
                 <option value="SC"> SC </option>
@@ -187,15 +187,15 @@
             </label>
 
             <select name="gender" bind:value={gender}>
-                <option value="" selected> Any </option>
-                <option value="neutral"> Neutral </option>
+                <option value=""> Any </option>
+                <option value="neutral" selected> Neutral </option>
                 <option value="female"> Female Only (+Supernumerary) </option>
             </select>
         </div>
 
         <div style="text-align: left;" class="flex-col">
             <label for="rank">
-                Closing Rank
+                Closing Category Rank
                 <span>
                     ?
                     <small class="tooltip"> Upper limit of Rank. Results are shown in Descending order lesser than the input. </small>
