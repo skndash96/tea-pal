@@ -4,9 +4,9 @@
 
     let /**@type {string[]}*/ institute = [],
         /**@type {string[]}*/ course = [],
-        /**@type {"HS"|"OS"|"AI" []}*/ quota = [],
-        /**@type {"OPEN"|"EWS"|"OBC-NCL"|"SC"|"ST"|"PwD"|""}*/ seat = "",
-        /**@type {"neutral"|"female"|""}*/ gender = "",
+        /**@type {"HS"|"OS"|"AI" []}*/ quota = ["AI"],
+        /**@type {"OPEN"|"EWS"|"OBC-NCL"|"SC"|"ST"|"PwD"|""}*/ seat = "OPEN",
+        /**@type {"neutral"|"female"|""}*/ gender = "neutral",
         /**@type {number|null}*/ cr = null,
         /**@type {2016|2017|2018|2019|2020|2021|2022|2023 []}*/ year = [],
         /**@type {1|2|3|4|5|6 []}*/ round = [],
