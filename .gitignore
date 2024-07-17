@@ -2,4 +2,5 @@
 .env
 views/
 db.sqlite
+db.backup
 .vscode/

@@ -8,7 +8,7 @@
         /**@type {"OPEN"|"EWS"|"OBC-NCL"|"SC"|"ST"|"PwD"|""}*/ seat = "OPEN",
         /**@type {"neutral"|"female"|""}*/ gender = "neutral",
         /**@type {number|null}*/ cr = null,
-        /**@type {2016|2017|2018|2019|2020|2021|2022|2023 []}*/ year = [],
+        /**@type {2016|2017|2018|2019|2020|2021|2022|2023|2024 []}*/ year = [],
         /**@type {1|2|3|4|5|6 []}*/ round = [],
         /**@type {Promise<any[]> | null}*/ results = null;
 
@@ -214,7 +214,7 @@
             <label for="year">Year</label>
 
             <select name="year" bind:value={year} multiple>
-                {#each [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023] as year}
+                {#each [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024] as year}
                     <option value={year}> {year} </option>
                 {/each}
             </select>
