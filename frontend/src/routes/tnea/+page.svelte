@@ -1,5 +1,6 @@
 <script>
     import List from "$lib/List.svelte";
+    import "$lib/main.css";
 
     const QUERY_PREFIX = "/api/tnea?";
 

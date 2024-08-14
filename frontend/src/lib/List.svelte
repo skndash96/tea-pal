@@ -9,13 +9,14 @@
 <div>
     <span style="margin-left: 2rem;"> Showing {rows.length} Records </span>
 
-    <div class="table">
-        <table class="striped">
-            <thead>
+    <div class="w-full overflow-x-auto">
+        <table class="table table-zebra table-pin-rows">
+            <thead class="table-header-group">
                 {#each Object.keys(rows[0]) as field}
                     <th> {field} </th>
                 {/each}
             </thead>
+
             <tbody>
                 {#each rows as row}
                     <tr>

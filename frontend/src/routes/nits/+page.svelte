@@ -1,7 +1,7 @@
 <script>
     //@ts-nocheck
-
     import { browser } from "$app/environment";
+    import "$lib/main.css";
 
     import Chart, { scales } from "chart.js/auto";
     import { onMount } from "svelte";
